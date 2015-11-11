@@ -17,8 +17,6 @@ class OSVR_DisplayConfigObject(Structure):
 
 OSVR_DisplayConfig = POINTER(OSVR_DisplayConfigObject)
 
-#may need to define __init__() for some classes, not sure
-
 class OSVR_Vec2(Structure):
     _fields_ = [("data", c_double * 2)]
 
@@ -118,7 +116,7 @@ OSVR_ButtonCallback = CFUNCTYPE(None, c_void_p, POINTER(OSVR_TimeValue), POINTER
 
 OSVR_AnalogCallback = CFUNCTYPE(None, c_void_p, POINTER(OSVR_TimeValue), POINTER(OSVR_AnalogReport))
 
-#Commented out because the OSVR_ImagingReport type is not defined in C
+#Commented out because the OSVR_ImagingReport type is not defined in C, may be included in the future
 #OSVR_ImagingCallback = CFUNCTYPE(None, c_void_p, POINTER(OSVR_TimeValue), POINTER(OSVR_ImagingReport))
 
 OSVR_Location2DCallback = CFUNCTYPE(None, c_void_p, POINTER(OSVR_TimeValue), POINTER(OSVR_Location2DReport))
@@ -134,46 +132,6 @@ OSVR_EyeTrackerBlinkCallback = CFUNCTYPE(None, c_void_p, POINTER(OSVR_TimeValue)
 OSVR_NaviVelocityCallback = CFUNCTYPE(None, c_void_p, POINTER(OSVR_TimeValue), POINTER(OSVR_NaviVelocityReport))
 
 OSVR_NaviPositionCallback = CFUNCTYPE(None, c_void_p, POINTER(OSVR_TimeValue), POINTER(OSVR_NaviPositionReport))
-
-
-#These were created so the getState functions could return a state and a timestamp
-class OSVR_TimestampedPoseState(Structure):
-    _fields_ = [("timestamp", OSVR_TimeValue), ("state", OSVR_Pose3)]
-
-class OSVR_TimestampedPositionState(Structure):
-    _fields_ = [("timestamp", OSVR_TimeValue), ("state", OSVR_Vec3)]
-
-class OSVR_TimestampedOrientationState(Structure):
-    _fields_ = [("timestamp", OSVR_TimeValue), ("state", OSVR_Quaternion)]
-
-class OSVR_TimestampedButtonState(Structure):
-    _fields_ = [("timestamp", OSVR_TimeValue), ("state", c_uint8)]
-
-class OSVR_TimestampedAnalogState(Structure):
-    _fields_ = [("timestamp", OSVR_TimeValue), ("state", c_double)]
-
-class OSVR_TimestampedLocation2DState(Structure):
-    _fields_ = [("timestamp", OSVR_TimeValue), ("state", OSVR_Vec2)]
-
-class OSVR_TimestampedDirectionState(Structure):
-    _fields_ = [("timestamp", OSVR_TimeValue), ("state", OSVR_Vec3)]
-
-class OSVR_TimestampedEyeTracker2DState(Structure):
-    _fields_ = [("timestamp", OSVR_TimeValue), ("state", OSVR_Vec2)]
-
-class OSVR_TimestampedEyeTracker3DState(Structure):
-    _fields_ = [("timestamp", OSVR_TimeValue), ("state", OSVR_EyeTracker3DState)]
-
-class OSVR_TimestampedEyeTrackerBlinkState(Structure):
-    _fields_ = [("timestamp", OSVR_TimeValue), ("state", c_uint8)]
-
-class OSVR_TimestampedNaviVelocityState(Structure):
-    _fields_ = [("timestamp", OSVR_TimeValue), ("state", OSVR_Vec2)]
-
-class OSVR_TimestampedNaviPositionState(Structure):
-    _fields_ = [("timestamp", OSVR_TimeValue), ("state", OSVR_Vec2)]
-
-
 
 
 # Error checking
@@ -201,7 +159,6 @@ def osvrClientUpdate(ctx):
     mylib.osvrClientUpdate.restype = c_int8
     returnvalue = mylib.osvrClientUpdate(ctx)
     checkReturn(returnvalue, 'osvrClientUpdate')
-    #maybe don't need to return the code, if throwing an exception would be enough
     return
 
 def osvrClientCheckStatus(ctx):
@@ -209,7 +166,7 @@ def osvrClientCheckStatus(ctx):
     mylib.osvrClientCheckStatus.restype = c_int8
     returnvalue = mylib.osvrClientCheckStatus(ctx)
     checkReturn(returnvalue, 'osvrClientCheckStatus')
-    return returnvalue
+    return
 
 def osvrClientShutdown(ctx):
     mylib.osvrClientShutdown.argtypes = [OSVR_ClientContext]
@@ -225,8 +182,8 @@ def osvrClientGetDisplay(ctx):
     mylib.osvrClientGetDisplay.restype = c_int8
     disp = pointer(OSVR_DisplayConfigObject())
     returnvalue = mylib.osvrClientGetDisplay(ctx, pointer(disp))
-    #checkReturn(returnvalue, 'osvrClientGetDisplay')
-    return disp, returnvalue
+    checkReturn(returnvalue, 'osvrClientGetDisplay')
+    return disp
 
 def osvrClientFreeDisplay(disp):
     mylib.osvrClientFreeDisplay.argtypes = [OSVR_DisplayConfig]
@@ -240,8 +197,7 @@ def osvrClientCheckDisplayStartup(disp):
     mylib.osvrClientCheckDisplayStartup.restype = c_int8
     returnvalue = mylib.osvrClientCheckDisplayStartup(disp)
     checkReturn(returnvalue, 'osvrClientCheckDisplayStartup')
-    #maybe don't need to return the code, if throwing an exception would be enough
-    return returnvalue
+    return
 
 def osvrClientGetNumDisplayInputs(disp):
     mylib.osvrClientGetNumDisplayInputs.argtypes = [OSVR_DisplayConfig, POINTER(c_uint8)]
@@ -254,7 +210,7 @@ def osvrClientGetNumDisplayInputs(disp):
 def osvrClientGetDisplayDimensions(disp, displayInputIndex):
     mylib.osvrClientGetDisplayDimensions.argtypes = [OSVR_DisplayConfig, c_uint8, POINTER(c_int32), POINTER(c_int32)]
     mylib.osvrClientGetDisplayDimensions.restype = c_int8
-    dimensions = OSVR_DIsplayDimensions()
+    dimensions = OSVR_DisplayDimensions()
     returnvalue = mylib.osvrClientGetDisplayDimensions(disp, c_uint8(displayInputIndex), pointer(dimensions.width), pointer(dimensions.height))
     checkReturn(returnvalue, 'osvrClientGetDisplayDimensions')
     return dimensions
@@ -505,98 +461,110 @@ def osvrRegisterNaviPositionCallback(iface, cb, userdata):
 def osvrGetPoseState(iface):
     mylib.osvrGetPoseState.argtypes = [OSVR_ClientInterface, POINTER(OSVR_TimeValue), POINTER(OSVR_Pose3)]
     mylib.osvrGetPoseState.restype = c_int8
-    t_state = OSVR_TimestampedPoseState()
-    returnvalue = mylib.osvrGetPoseState(iface, pointer(t_state.timestamp), pointer(t_state.state))
-    #checkReturn(returnvalue, 'osvrGetPoseState')
-    return (returnvalue, t_state)
+    timestamp = OSVR_TimeValue()
+    state = OSVR_Pose3()
+    returnvalue = mylib.osvrGetPoseState(iface, pointer(timestamp), pointer(state))
+    checkReturn(returnvalue, 'osvrGetPoseState')
+    return (state, timestamp)
 
 def osvrGetPositionState(iface):
     mylib.osvrGetPositionState.argtypes = [OSVR_ClientInterface, POINTER(OSVR_TimeValue), POINTER(OSVR_Vec3)]
     mylib.osvrGetPositionState.restype = c_int8
-    t_state = OSVR_TimestampedPositionState()
-    returnvalue = mylib.osvrGetPositionState(iface, pointer(t_state.timestamp), pointer(t_state.state))
+    timestamp = OSVR_TimeValue()
+    state = OSVR_Vec3()
+    returnvalue = mylib.osvrGetPositionState(iface, pointer(timestamp), pointer(state))
     checkReturn(returnvalue, 'osvrGetPositionState')
-    return t_state
+    return (state, timestamp)
 
 def osvrGetOrientationState(iface):
     mylib.osvrGetOrientationState.argtypes = [OSVR_ClientInterface, POINTER(OSVR_TimeValue), POINTER(OSVR_Quaternion)]
     mylib.osvrGetOrientationState.restype = c_int8
-    t_state = OSVR_TimestampedOrientationState()
-    returnvalue = mylib.osvrGetOrientationState(iface, pointer(t_state.timestamp), pointer(t_state.state))
+    timestamp = OSVR_TimeValue()
+    state = OSVR_Quaternion()
+    returnvalue = mylib.osvrGetOrientationState(iface, pointer(timestamp), pointer(state))
     checkReturn(returnvalue, 'osvrGetOrientationState')
-    return t_state
+    return (state, timestamp)
 
 def osvrGetButtonState(iface):
     mylib.osvrGetButtonState.argtypes = [OSVR_ClientInterface, POINTER(OSVR_TimeValue), POINTER(c_uint8)]
     mylib.osvrGetButtonState.restype = c_int8
-    t_state = OSVR_TimestampedButtonState()
-    returnvalue = mylib.osvrGetButtonState(iface, pointer(t_state.timestamp), pointer(t_state.state))
+    timestamp = OSVR_TimeValue()
+    state = c_uint8()
+    returnvalue = mylib.osvrGetButtonState(iface, pointer(timestamp), pointer(state))
     checkReturn(returnvalue, 'osvrGetButtonState')
-    return t_state
+    return (state, timestamp)
 
 def osvrGetAnalogState(iface):
     mylib.osvrGetAnalogState.argtypes = [OSVR_ClientInterface, POINTER(OSVR_TimeValue), POINTER(c_double)]
     mylib.osvrGetAnalogState.restype = c_int8
-    t_state = OSVR_TimestampedAnalogState()
-    returnvalue = mylib.osvrGetAnalogState(iface, pointer(t_state.timestamp), pointer(t_state.state))
+    timestamp = OSVR_TimeValue()
+    state = c_double()
+    returnvalue = mylib.osvrGetAnalogState(iface, pointer(timestamp), pointer(state))
     checkReturn(returnvalue, 'osvrGetAnalogState')
-    return t_state
+    return (state, timestamp)
 
 def osvrGetLocation2DState(iface):
     mylib.osvrGetLocation2DState.argtypes = [OSVR_ClientInterface, POINTER(OSVR_TimeValue), POINTER(OSVR_Vec2)]
     mylib.osvrGetLocation2DState.restype = c_int8
-    t_state = OSVR_TimestampedLocation2DState()
-    returnvalue = mylib.osvrGetLocation2DState(iface, pointer(t_state.timestamp), pointer(t_state.state))
+    timestamp = OSVR_TimeValue()
+    state = OSVR_Vec2()
+    returnvalue = mylib.osvrGetLocation2DState(iface, pointer(timestamp), pointer(state))
     checkReturn(returnvalue, 'osvrGetLocation2DState')
-    return t_state
+    return (state, timestamp)
 
 def osvrGetDirectionState(iface):
     mylib.osvrGetDirectionState.argtypes = [OSVR_ClientInterface, POINTER(OSVR_TimeValue), POINTER(OSVR_Vec3)]
     mylib.osvrGetDirectionState.restype = c_int8
-    t_state = OSVR_TimestampedDirectionState()
-    returnvalue = mylib.osvrGetDirectionState(iface, pointer(t_state.timestamp), pointer(t_state.state))
+    timestamp = OSVR_TimeValue()
+    state =OSVR_Vec3()
+    returnvalue = mylib.osvrGetDirectionState(iface, pointer(timestamp), pointer(state))
     checkReturn(returnvalue, 'osvrGetDirectionState')
-    return t_state
+    return (state, timestamp)
 
 def osvrGetEyeTracker2DState(iface):
     mylib.osvrGetEyeTracker2DState.argtypes = [OSVR_ClientInterface, POINTER(OSVR_TimeValue), POINTER(OSVR_Vec2)]
     mylib.osvrGetEyeTracker2DState.restype = c_int8
-    t_state = OSVR_TimestampedEyeTracker2DState()
-    returnvalue = mylib.osvrGetEyeTracker2DState(iface, pointer(t_state.timestamp), pointer(t_state.state))
+    timestamp = OSVR_TimeValue()
+    state = OSVR_Vec2()
+    returnvalue = mylib.osvrGetEyeTracker2DState(iface, pointer(timestamp), pointer(state))
     checkReturn(returnvalue, 'osvrGetEyeTracker2DState')
-    return t_state
+    return (state, timestamp)
 
 def osvrGetEyeTracker3DState(iface):
     mylib.osvrGetEyeTracker3DState.argtypes = [OSVR_ClientInterface, POINTER(OSVR_TimeValue), POINTER(OSVR_EyeTracker3DState)]
     mylib.osvrGetEyeTracker3DState.restype = c_int8
-    t_state = OSVR_TimestampedEyeTracker3DState()
-    returnvalue = mylib.osvrGetEyeTracker3DState(iface, pointer(t_state.timestamp), pointer(t_state.state))
+    timestamp = OSVR_TimeValue()
+    state = OSVR_EyeTracker3DState()
+    returnvalue = mylib.osvrGetEyeTracker3DState(iface, pointer(timestamp), pointer(state))
     checkReturn(returnvalue, 'osvrGetEyeTracker3DState')
-    return t_state
+    return (state, timestamp)
 
 def osvrGetEyeTrackerBlinkState(iface):
     mylib.osvrGetEyeTrackerBlinkState.argtypes = [OSVR_ClientInterface, POINTER(OSVR_TimeValue), POINTER(c_uint8)]
     mylib.osvrGetEyeTrackerBlinkState.restype = c_int8
-    t_state = OSVR_TimestampedEyeTrackerBlinkState()
-    returnvalue = mylib.osvrGetEyeTrackerBlinkState(iface, pointer(t_state.timestamp), pointer(t_state.state))
+    timestamp = OSVR_TimeValue()
+    state = c_uint8()
+    returnvalue = mylib.osvrGetEyeTrackerBlinkState(iface, pointer(timestamp), pointer(state))
     checkReturn(returnvalue, 'osvrGetEyeTrackerBlinkState')
-    return t_state
+    return (state, timestamp)
 
 def osvrGetNaviVelocityState(iface):
     mylib.osvrGetNaviVelocityState.argtypes = [OSVR_ClientInterface, POINTER(OSVR_TimeValue), POINTER(OSVR_Vec2)]
     mylib.osvrGetNaviVelocityState.restype = c_int8
-    t_state = OSVR_TimestampedNaviVelocityState()
-    returnvalue = mylib.osvrGetNaviVelocityState(iface, pointer(t_state.timestamp), pointer(t_state.state))
+    timestamp = OSVR_TimeValue()
+    state = OSVR_Vec2()
+    returnvalue = mylib.osvrGetNaviVelocityState(iface, pointer(timestamp), pointer(state))
     checkReturn(returnvalue, 'osvrGetNaviVelocityState')
-    return t_state
+    return (state, timestamp)
 
 def osvrGetNaviPositionState(iface):
     mylib.osvrGetNaviPositionState.argtypes = [OSVR_ClientInterface, POINTER(OSVR_TimeValue), POINTER(OSVR_Vec2)]
     mylib.osvrGetNaviPositionState.restype = c_int8
-    t_state = OSVR_TimestampedNaviPositionState()
-    returnvalue = mylib.osvrGetNaviPositionState(iface, pointer(t_state.timestamp), pointer(t_state.state))
+    timestamp = OSVR_TimeValue()
+    state = OSVR_Vec2()
+    returnvalue = mylib.osvrGetNaviPositionState(iface, pointer(timestamp), pointer(state))
     checkReturn(returnvalue, 'osvrGetNaviPositionState')
-    return t_state
+    return (state, timestamp)
 
 
 # ParametersC.h functions

@@ -1,16 +1,16 @@
 from osvrClientKit import *
-def class ClientContext(self):
+class ClientContext(self):
     def __init__(self, applicationIdentifier):
         self.context = osvrClientInit(applicationIdentifier)
     def checkStatus(self):
         return osvrClientCheckStatus(self.context)
     def update(self):
-        return osvrClientUpdate(self.context);
+        return osvrClientUpdate(self.context)
     def getInterface(self, path):
-        osvrClientGetInterface(self.context, path, iface)
+        iface = osvrClientGetInterface(self.context, path)
         return new Interface(iface)
     def getStringParameter(self, path):
-        osvrGetStringParameter(self.context, path, buf, length)
-        return path
+        length = osvrGetStringParameterLength(self.context, path)
+        return osvrGetStringParameter(self.context, path, length)
 
  

@@ -1,52 +1,37 @@
 from osvrClientKit import *
 
-def class DisplayConfig
+class DisplayConfig
     def __init__(self, display):
         self.disp = display
     def checkDisplayStartup():
-        return osvrCheckDisplayStartup(self.disp):
+        return osvrCheckDisplayStartup(self.disp)
     def getNumDisplayInputs(self):
-        osvrGetNumDisplayInputs(self.disp, ret)
-        return ret
+        return osvrGetNumDisplayInputs(self.disp)
     def getDisplayDimensions(self, displayInputIndex):
-         osvrClientGetDisplayDimensions(self.disp, displayInputIndex, width, height)
-        return OSVR_DisplayDimensions(width, height)
+        return osvrClientGetDisplayDimensions(self.disp, displayInputIndex)
     def getNumViewers(self):
-        osvrClientGetNumViewers(self.disp, ret)
-        return ret
+        return osvrClientGetNumViewers(self.disp)
     def getViewerPose(self, viewer):
-        osvrClientGetViewerPose(self.disp, viewer, ret)
-        return ret
+        return osvrClientGetViewerPose(self.disp, viewer)
     def getNumEyesForViewer(self, viewer):
-        osvrClientGetNumEyesForViewer(self.disp, viewer, ret)
-        return ret
+        return osvrClientGetNumEyesForViewer(self.disp, viewer)
     def getViewerEyePose(self, viewer, eye):
-        osvrClientGetViewerEyePose(self.disp, viewer, ret)
-        return ret
+        return osvrClientGetViewerEyePose(self.disp, viewer, eye)
     def getViewerEyeViewMatrixd(self, viewer, eye, flags):
-        osvrGetViewerEyeViewMatrixd(self.disp, viewer, eye, flags, ret)
-        return ret
+        return osvrGetViewerEyeViewMatrixd(self.disp, viewer, eye, flags)
     def getViewerEyeViewMatrixf(self, viewer, eye, flags):
-        osvrGetViewerEyeViewMAtrixf(self.disp, viewer, eye flags, ret)
+        return osvrGetViewerEyeViewMatrixf(self.disp, viewer, eye flags)
     def getNumSurfacesForViewerEye(self, viewer, eye):
-        osvrGetNumSurfacesForViewerEye(self.disp, viewer, eye, ret)
-        return ret
+        return osvrGetNumSurfacesForViewerEye(self.disp, viewer, eye)
     def getRelativeViewportForViewerEyeSurface(self, viewer, eye, surface):
-        osvrGetRelativeViewportForViewerEyeSurface(self.disp, viewer, eye, ret)
-        return ret
+        return osvrGetRelativeViewportForViewerEyeSurface(self.disp, viewer, eye, surface)
     def getViewerEyeSurfaceDisplayInputIndex(self, viewer, eye, surface):
-        osvrGetViewerEyeSurfaceDisplayInputIndex(self.disp, viewer, eye, surface, ret)
-        return ret
+        return osvrGetViewerEyeSurfaceDisplayInputIndex(self.disp, viewer, eye, surface)
     def getProjectionMatrixForViewerEyeSurfaced(self, viewer, eye, surface, near, far, flags):
-        osvrGetViewerEyeSurfaceProjectionMatrixd(self.disp, viewer, eye, surface, near, far, flags, ret)
-        return ret
+        return osvrGetViewerEyeSurfaceProjectionMatrixd(self.disp, viewer, eye, surface, near, far, flags)
     def getProjectionMatrixForViewerEyeSurfacef(self, viewer, eye, surface, near, far, flags):
-        osvrGetViewerEyeSurfaceProjectionMatrixf(self.disp, viewer, eye, surface, near, far, flags, ret)
-        return ret
+        return osvrGetViewerEyeSurfaceProjectionMatrixf(self.disp, viewer, eye, surface, near, far, flags)
     def getViewerEyeSurfaceProjectionClippingPlanes(self, viewer, eye, surface):
-        osvrGetViewerEyeSurfaceProjectionClippingPlanes(self.disp, viewer, eye, surface, ret)
-        return ret
+        return osvrGetViewerEyeSurfaceProjectionClippingPlanes(self.disp, viewer, eye, surface)
     def doesViewerEyeSurfaceWantDistortion(self, viewer, eye, surface):
-        osvrDoesViewerEyeSurfaceWantDistortion(self.disp, viewer, eye, surface, ret):
-        return ret
-     
+        return osvrDoesViewerEyeSurfaceWantDistortion(self.disp, viewer, eye, surface):

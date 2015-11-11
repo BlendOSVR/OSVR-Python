@@ -1,5 +1,5 @@
 from osvrClientKit import *
-def class Interface(self):
+class Interface(self):
     def __init__(self, iface):
         self.interface = iface
     def registerCallback(self, cb, userdata):
