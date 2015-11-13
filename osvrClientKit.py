@@ -210,7 +210,7 @@ def osvrClientGetNumDisplayInputs(disp):
 def osvrClientGetDisplayDimensions(disp, displayInputIndex):
     mylib.osvrClientGetDisplayDimensions.argtypes = [OSVR_DisplayConfig, c_uint8, POINTER(c_int32), POINTER(c_int32)]
     mylib.osvrClientGetDisplayDimensions.restype = c_int8
-    dimensions = OSVR_DisplayDimensions()
+    dimensions = OSVR_DIsplayDimensions()
     returnvalue = mylib.osvrClientGetDisplayDimensions(disp, c_uint8(displayInputIndex), pointer(dimensions.width), pointer(dimensions.height))
     checkReturn(returnvalue, 'osvrClientGetDisplayDimensions')
     return dimensions

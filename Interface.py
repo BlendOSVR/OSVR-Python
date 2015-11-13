@@ -1,5 +1,5 @@
 from osvrClientKit import *
-class Interface(self):
+class Interface:
     def __init__(self, iface):
         self.interface = iface
     def registerCallback(self, cb, userdata):
@@ -11,8 +11,8 @@ class Interface(self):
             osvrRegisterButtonCallback(self.interface, cb, userdata)
         if isinstance(cb, OSVR_AnalogCallback):
             osvrRegisterAnalogCallback(self.interface, cb, userdata)
-        if isinstance(cb, OSVR_LocationCallback):
-            osvrRegisterLocationCallback(self.interface, cb, userdata)
+        if isinstance(cb, OSVR_Location2DCallback):
+            osvrRegisterLocation2DCallback(self.interface, cb, userdata)
         if isinstance(cb, OSVR_DirectionCallback):
             osvrRegisterDirectionCallback(self.interface, cb, userdata)
         if isinstance(cb, OSVR_EyeTracker2DCallback):

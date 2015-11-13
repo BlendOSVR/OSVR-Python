@@ -1,6 +1,6 @@
 from osvrClientKit import *
 
-class DisplayConfig
+class DisplayConfig:
     def __init__(self, display):
         self.disp = display
     def checkDisplayStartup():
@@ -20,7 +20,7 @@ class DisplayConfig
     def getViewerEyeViewMatrixd(self, viewer, eye, flags):
         return osvrGetViewerEyeViewMatrixd(self.disp, viewer, eye, flags)
     def getViewerEyeViewMatrixf(self, viewer, eye, flags):
-        return osvrGetViewerEyeViewMatrixf(self.disp, viewer, eye flags)
+        return osvrGetViewerEyeViewMatrixf(self.disp, viewer, eye, flags)
     def getNumSurfacesForViewerEye(self, viewer, eye):
         return osvrGetNumSurfacesForViewerEye(self.disp, viewer, eye)
     def getRelativeViewportForViewerEyeSurface(self, viewer, eye, surface):
@@ -34,4 +34,4 @@ class DisplayConfig
     def getViewerEyeSurfaceProjectionClippingPlanes(self, viewer, eye, surface):
         return osvrGetViewerEyeSurfaceProjectionClippingPlanes(self.disp, viewer, eye, surface)
     def doesViewerEyeSurfaceWantDistortion(self, viewer, eye, surface):
-        return osvrDoesViewerEyeSurfaceWantDistortion(self.disp, viewer, eye, surface):
+        return osvrDoesViewerEyeSurfaceWantDistortion(self.disp, viewer, eye, surface)
