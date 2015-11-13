@@ -12,9 +12,16 @@ def myPositionCallback(userdata, timestamp, report):
 
 ctx = ClientContext("com.osvr.exampleclients.TrackerCallback")
 lefthand = ctx.getInterface("/me/head")
-lefthand.registerCallback(OSVR_PoseCallback(myTrackerCallback), None)
-lefthand.registerCallback(OSVR_OrientationCallback(myOrientationCallback), None)
-lefthand.registerCallback(OSVR_PositionCallback(myPositionCallback), None)
+
+poseCallback = OSVR_PoseCallback(myTrackerCallback)
+
+orientationCallback = OSVR_OrientationCallback(myOrientationCallback)
+
+positionCallback = OSVR_PositionCallback(myPositionCallback)
+
+lefthand.registerCallback(poseCallback, None)
+lefthand.registerCallback(orientationCallback, None)
+lefthand.registerCallback(positionCallback, None)
 
 for i in range(0, 1000000):
     ctx.update()
