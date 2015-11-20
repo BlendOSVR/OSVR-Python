@@ -1,8 +1,10 @@
 from osvrClientKit import *
 
 class DisplayConfig:
-    def __init__(self, display):
+    def __init__(self, display, ctx):
         self.disp = display
+        self.context = ctx
+        self.freed = False
     def checkDisplayStartup():
         return osvrCheckDisplayStartup(self.disp)
     def getNumDisplayInputs(self):
@@ -35,3 +37,7 @@ class DisplayConfig:
         return osvrGetViewerEyeSurfaceProjectionClippingPlanes(self.disp, viewer, eye, surface)
     def doesViewerEyeSurfaceWantDistortion(self, viewer, eye, surface):
         return osvrDoesViewerEyeSurfaceWantDistortion(self.disp, viewer, eye, surface)
+    def dipose(self):
+        return osvrClientFreeDisplay(self.disp)
+    def __del__(self):
+        self.dispose()

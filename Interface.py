@@ -1,7 +1,9 @@
 from osvrClientKit import *
 class Interface:
-    def __init__(self, iface):
+    def __init__(self, iface, ctx):
         self.interface = iface
+        self.context = ctx
+        self.freed = False
     def registerCallback(self, cb, userdata):
         if isinstance(cb, OSVR_PoseCallback):
             osvrRegisterPoseCallback(self.interface, cb, userdata)
@@ -49,3 +51,8 @@ class Interface:
         return osvrGetNaviVelocityState(self.interface)
     def getNaviPositionState(self):
         return osvrGetNaviPositionState(self.interface)
+    def dispose(self):
+        return osvrClientFreeInterface(self.context, self.interface)
+    def __del__(self):
+        if !freed:
+            self.dispose()
