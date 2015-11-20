@@ -40,4 +40,5 @@ class DisplayConfig:
     def dipose(self):
         return osvrClientFreeDisplay(self.disp)
     def __del__(self):
-        self.dispose()
+        if !freed:
+            self.dispose()

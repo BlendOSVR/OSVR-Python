@@ -14,7 +14,10 @@ class ClientContext:
         objList.append(ret)
         return ret
     def getDisplayConfig(self):
-        return osvrClientGetDisplay(self.context)
+        disp = osvrClientGetDisplay(self.context)
+        ret = Display(disp, self.context)
+        objList.append(ret)
+        return ret
     def getStringParameter(self, path):
         length = osvrGetStringParameterLength(self.context, path)
         return osvrGetStringParameter(self.context, path, length)
