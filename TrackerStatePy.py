@@ -1,9 +1,7 @@
-from ClientKit import *
-from Interface import *
-from Display import *
+import osvr.ClientKit
+from osvr.ClientKitRaw import ReturnError
 
-
-ctx = ClientContext("com.osvr.exampleclients.TrackerState")
+ctx = osvr.ClientKit.ClientContext("com.osvr.exampleclients.TrackerState")
 head = ctx.getInterface("/me/head")
 
 

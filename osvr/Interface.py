@@ -1,4 +1,4 @@
-from osvrClientKit import *
+from osvr.ClientKitRaw import *
 class Interface:
     def __init__(self, iface, ctx):
         self.interface = iface
@@ -52,7 +52,7 @@ class Interface:
     def getNaviPositionState(self):
         return osvrGetNaviPositionState(self.interface)
     def dispose(self):
-        return osvrClientFreeInterface(self.context, self.interface)
+        if self.freed == False:
+            return osvrClientFreeInterface(self.context, self.interface)
     def __del__(self):
-        if !freed:
-            self.dispose()
+        self.dispose()

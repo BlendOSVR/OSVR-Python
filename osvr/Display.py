@@ -1,4 +1,4 @@
-from osvrClientKit import *
+from osvr.ClientKitRaw import *
 
 class DisplayConfig:
     def __init__(self, display, ctx):
@@ -38,7 +38,7 @@ class DisplayConfig:
     def doesViewerEyeSurfaceWantDistortion(self, viewer, eye, surface):
         return osvrDoesViewerEyeSurfaceWantDistortion(self.disp, viewer, eye, surface)
     def dipose(self):
-        return osvrClientFreeDisplay(self.disp)
+        if !self.freed:
+            return osvrClientFreeDisplay(self.disp)
     def __del__(self):
-        if !freed:
-            self.dispose()
+        self.dispose()
