@@ -24,7 +24,7 @@ class DisplayConfig:
     def getViewerEyeViewMatrixf(self, viewer, eye, flags):
         return osvrGetViewerEyeViewMatrixf(self.disp, viewer, eye, flags)
     def getNumSurfacesForViewerEye(self, viewer, eye):
-        return osvrGetNumSurfacesForViewerEye(self.disp, viewer, eye)
+        return osvrClientGetNumSurfacesForViewerEye(self.disp, viewer, eye)
     def getRelativeViewportForViewerEyeSurface(self, viewer, eye, surface):
         return osvrGetRelativeViewportForViewerEyeSurface(self.disp, viewer, eye, surface)
     def getViewerEyeSurfaceDisplayInputIndex(self, viewer, eye, surface):
@@ -37,8 +37,8 @@ class DisplayConfig:
         return osvrGetViewerEyeSurfaceProjectionClippingPlanes(self.disp, viewer, eye, surface)
     def doesViewerEyeSurfaceWantDistortion(self, viewer, eye, surface):
         return osvrDoesViewerEyeSurfaceWantDistortion(self.disp, viewer, eye, surface)
-    def dipose(self):
-        if !self.freed:
+    def dispose(self):
+        if self.freed == False:
             return osvrClientFreeDisplay(self.disp)
     def __del__(self):
         self.dispose()

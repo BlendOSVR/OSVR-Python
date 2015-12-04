@@ -1,5 +1,6 @@
 from osvr.ClientKitRaw import *
 from osvr.Interface import *
+from osvr.Display import *
 class ClientContext:
     def __init__(self, applicationIdentifier):
         self.context = osvrClientInit(applicationIdentifier)
@@ -15,12 +16,12 @@ class ClientContext:
         return ret
     def getDisplayConfig(self):
         disp = osvrClientGetDisplay(self.context)
-        ret = Display(disp, self.context)
+        ret = DisplayConfig(disp, self.context)
         self.objList.append(ret)
         return ret
     def getStringParameter(self, path):
-        length = osvrGetStringParameterLength(self.context, path)
-        return osvrGetStringParameter(self.context, path, length)
+        length = osvrClientGetStringParameterLength(self.context, path)
+        return osvrClientGetStringParameter(self.context, path, length)
     def shutdown(self):
         for object in self.objList:
             object.freed = True
