@@ -1,3 +1,8 @@
+"""
+This module provides access to the OSVR ClientKit C API via the foreign function interface ctypes. 
+Each class defines the struct of the same name in the C API. Likewise, each method defines the function of the same name in the C API.
+For reference, view the C API documentation at http://resource.osvr.com/docs/OSVR-Core/group__ClientKit.html 
+"""
 from ctypes import *
 
 mylib = cdll.LoadLibrary("osvrClientKit")
