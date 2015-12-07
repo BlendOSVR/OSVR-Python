@@ -9,6 +9,8 @@ class Interface:
             osvrRegisterPoseCallback(self.interface, cb, userdata)
         if isinstance(cb, OSVR_PositionCallback):
             osvrRegisterPositionCallback(self.interface, cb, userdata)
+        if isinstance(cb, OSVR_OrientationCallback):
+            osvrRegisterOrientationCallback(self.interface, cb, userdata)
         if isinstance(cb, OSVR_ButtonCallback):
             osvrRegisterButtonCallback(self.interface, cb, userdata)
         if isinstance(cb, OSVR_AnalogCallback):
